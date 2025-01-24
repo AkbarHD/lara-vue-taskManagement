@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,13 +27,25 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Admin/Home');
+    return Inertia::render('Admin/Home', [
+        'menuHome' => true,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Projects
+    Route::controller(ProjectController::class)->prefix('projects')->group(function () {
+        Route::get('/create', 'create');
+    });
+
+    // Teams
+    Route::controller(ProjectController::class)->prefix('teams')->group(function () {
+        Route::post('/create', 'store');
+    });
 });
 
 require __DIR__ . '/auth.php';
