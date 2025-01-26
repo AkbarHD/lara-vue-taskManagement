@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -43,7 +44,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Teams
-    Route::controller(ProjectController::class)->prefix('teams')->group(function () {
+    Route::controller(TeamController::class)->prefix('teams')->group(function () {
         Route::post('/create', 'store');
     });
 });
