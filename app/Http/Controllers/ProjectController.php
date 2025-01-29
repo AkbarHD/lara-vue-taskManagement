@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Project;
 use App\Models\Team;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -20,4 +21,26 @@ class ProjectController extends Controller
             'teams' => $teams
         ]);
     }
+
+    public function store(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'team_id' => 'required',
+            'name_proyek' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date|after_or_equal:start',
+        ]);
+
+        // Simpan data ke database
+        Project::create([
+            'team_id' => $request->input('team_id'),
+            'name_proyek' => $request->input('name_proyek'),
+            'start' => $request->input('start'),
+            'end' => $request->input('end'),
+        ]);
+
+        // return response()->json(['success' => 'Project created successfully!']);
+    }
+
 }
