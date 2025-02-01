@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::controller(ProjectController::class)->prefix('projects')->group(function () {
         Route::get('/create', 'create');
         Route::post('/create', 'store');
+        Route::get('/index', 'index');
     });
 
     // Teams

@@ -11,6 +11,15 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
+
+    public function index()
+    {
+        $projects = Project::get();
+        return Inertia::render('Projects/ProjectList', [
+            'menuTask' => 'active',
+            'projects' => $projects
+        ]);
+    }
     public function create()
     {
         $teams = Team::whereHas('users', function (Builder $query) {
