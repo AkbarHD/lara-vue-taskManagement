@@ -1,6 +1,43 @@
+<script setup>
+import AdminLayout from '@/Layouts/AdminLayout.vue';
+import { router } from '@inertiajs/vue3';
+import { reactive } from 'vue';
+
+
+const formTeam = reactive({
+    name: null
+});
+
+const forProject = reactive({
+    team_id: null, // Sesuaikan dengan backend
+    name_proyek: null, // Sesuaikan dengan backend
+    start: null,
+    end: null,
+});
+
+defineProps({
+    errors: Object,
+    teams: Object
+})
+
+const createTeam = () => {
+    router.post('/teams/create', formTeam);
+    formTeam.name = null;
+}
+
+const createProject = () => {
+    router.post('/projects/create', forProject);
+    // Reset semua nilai form setelah pengiriman
+    forProject.team_id = null;
+    forProject.name_proyek = null;
+    forProject.start = null;
+    forProject.end = null;
+};
+
+</script>
 <template>
     <AdminLayout>
-        <div class="w-2/3 mx-auto mt-10">
+        <div class="w-[80%] mx-auto mt-10">
             <div class="text-bold font-weight-bold text-3xl mb-5">
                 Create Project
             </div>
@@ -8,7 +45,7 @@
                 <div class="w-2/3 border p-8">
                     <section class="bg-white dark:bg-gray-900">
                         <div class="py-8 px-4 mx-auto max-w-2xl ">
-                            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add a new product</h2>
+                            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add a new project</h2>
                             <form @submit.prevent="createProject">
                                 <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                     <div class="sm:col-span-2">
@@ -86,38 +123,3 @@
         </div>
     </AdminLayout>
 </template>
-<script setup>
-import AdminLayout from '@/Layouts/AdminLayout.vue';
-import { router } from '@inertiajs/vue3';
-import { reactive } from 'vue';
-const formTeam = reactive({
-    name: null
-});
-
-const forProject = reactive({
-    team_id: null, // Sesuaikan dengan backend
-    name_proyek: null, // Sesuaikan dengan backend
-    start: null,
-    end: null,
-});
-
-defineProps({
-    errors: Object,
-    teams: Object
-})
-
-const createTeam = () => {
-    router.post('/teams/create', formTeam);
-    formTeam.name = null;
-}
-
-const createProject = () => {
-    router.post('/projects/create', forProject);
-    // Reset semua nilai form setelah pengiriman
-    forProject.team_id = null;
-    forProject.name_proyek = null;
-    forProject.start = null;
-    forProject.end = null;
-};
-
-</script>

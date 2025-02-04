@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', 'create');
         Route::post('/create', 'store');
         Route::get('/index', 'index');
+        Route::put('/update/{id}', 'update');
+        Route::delete('/delete/{id}', 'delete');
     });
 
     // Teams

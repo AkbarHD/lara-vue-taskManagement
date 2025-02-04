@@ -17,9 +17,9 @@ class Project extends Model
         'end',
     ];
 
-    public function Teams()
+    public function teams()
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 
 }

@@ -2,26 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project;
 use App\Models\Team;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use Inertia\Inertia;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 
 class ProjectController extends Controller
 {
 
     public function index()
     {
-        $projects = Project::get();
+        $user = Auth::user();
+        // ke relasi teams dlu, lalu ke relasi users, yang di model teams
+        $projects = Project::whereHas('teams.users', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->get();
+
+        // menampilan tim berdasarkan id yang sedang login
+        $teams = Team::whereHas('users', function (Builder $query) {
+            $query->where('user_id', Auth::user()->id);
+        })->get();
         return Inertia::render('Projects/ProjectList', [
             'menuTask' => 'active',
-            'projects' => $projects
+            'projects' => $projects,
+            'teams' => $teams
         ]);
     }
     public function create()
     {
+        // menampilan tim berdasarkan id yang sedang login
         $teams = Team::whereHas('users', function (Builder $query) {
             $query->where('user_id', Auth::user()->id);
         })->get();
@@ -50,6 +61,23 @@ class ProjectController extends Controller
         ]);
 
         // return response()->json(['success' => 'Project created successfully!']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'team_id' => 'required',
+            'name_proyek' => 'required',
+            'start' => 'required|date',
+            'end' => 'required|date|after_or_equal:start',
+        ]);
+        $project = Project::find($id);
+        $project->team_id = $request->input('team_id');
+        $project->name_proyek = $request->input('name_proyek');
+        $project->start = $request->input('start');
+        $project->end = $request->input('end');
+        $project->update();
     }
 
 }
