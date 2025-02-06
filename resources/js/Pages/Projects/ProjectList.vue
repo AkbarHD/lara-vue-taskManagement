@@ -31,15 +31,14 @@
                                                 clip-rule="evenodd" />
                                         </svg>
 
-                                        <Link :href="'/projects/delete' + project.id" method="delete">
-                                        <svg class="w-6 h-6 text-red-600 dark:text-white" aria-hidden="true"
+                                        <!-- tidak menggunaan <Link> -->
+                                        <svg @click="confirmDeleteProject(project.id)" class="w-6 h-6 text-red-600 dark:text-white cursor-pointer" aria-hidden="true"
                                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                                             viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                                 stroke-width="2"
                                                 d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
                                         </svg>
-                                        </Link>
                                     </td>
                                 </tr>
                             </tbody>
@@ -87,7 +86,14 @@
                                         <SecondaryButton @click="closeModal">Close</SecondaryButton>
                                     </div>
 
-                            </form>
+                                </form>
+                            </div>
+                        </Modal>
+
+                        <Modal :show="showDeleteModal" @close="closeModal">
+                            <div class="flex gap-4 mt-3">
+                                <DangerButton @click="deleteProject">Delete</DangerButton>
+                                <SecondaryButton @click="closeModal">Close</SecondaryButton>
                             </div>
                         </Modal>
                     </div>
@@ -104,6 +110,7 @@ import { Link, router } from '@inertiajs/vue3';
 import Modal from '@/Components/Modal.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
 import { reactive, ref } from 'vue';
 
 defineProps({
@@ -112,7 +119,9 @@ defineProps({
 });
 
 const showEditModal = ref(false);
-const idProject = ref('');
+const showDeleteModal = ref(false);
+const idProject = ref(null);
+const idDelProject = ref(null);
 
 
 const forProject = reactive({
@@ -132,13 +141,24 @@ const confirmEditProject = (project) => {
     idProject.value = project.id;
 }
 
+const confirmDeleteProject = (id) => {
+    showDeleteModal.value = true;
+    idDelProject.value = id;
+}
+
 const updateProject = () => {
-    router.put('/projects/update/' + idProject.value, forProject);
+    router.put('/projects/update/' + idProject.value, forProject); // ini dpt dari confirm edit
     closeModal();
 };
 
+const deleteProject = () => {
+    router.delete('/projects/delete/' + idDelProject.value); // ini dpt dari confirmDeleteProject
+    closeModal();
+}
+
 const closeModal = () => {
-    showEditModal.value = false;
+    if (showEditModal.value) showEditModal.value = false;
+    if (showDeleteModal.value) showDeleteModal.value = false;
 }
 
 

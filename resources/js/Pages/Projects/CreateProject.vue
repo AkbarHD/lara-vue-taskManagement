@@ -55,8 +55,9 @@ const createProject = () => {
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option v-for="(team, index) in teams" :key="index" :value="team.id">
                                                 {{ team.name }}</option>
-
                                         </select>
+                                        <div class="text-red-800" v-if="errors.team_id">{{ errors.team_id }}</div>
+
                                     </div>
                                     <div class="sm:col-span-2">
                                         <label for="name"
@@ -64,21 +65,24 @@ const createProject = () => {
                                             Project</label>
                                         <input type="text" v-model="forProject.name_proyek" id="name"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                            placeholder="Name Project" required="">
+                                            placeholder="Name Project">
+                                            <div class="text-red-800" v-if="errors.name_proyek">{{ errors.name_proyek }}</div>
                                     </div>
                                     <div class="w-full">
                                         <label for="start"
                                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Start</label>
                                         <input type="date" id="start" v-model="forProject.start"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                            placeholder="Product brand" required="">
+                                            placeholder="Product brand" >
+                                            <div class="text-red-800" v-if="errors.start">{{ errors.start }}</div>
                                     </div>
                                     <div class="w-full">
                                         <label for="end"
                                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">End</label>
                                         <input type="date" id="end" v-model="forProject.end"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                            placeholder="$2999" required="">
+                                            placeholder="$2999" >
+                                            <div class="text-red-800" v-if="errors.end">{{ errors.end }}</div>
                                     </div>
 
                                 </div>

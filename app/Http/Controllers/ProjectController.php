@@ -80,4 +80,12 @@ class ProjectController extends Controller
         $project->update();
     }
 
+    public function delete($id)
+    {
+        $project = Project::find($id);
+        if($project){
+            $project->delete();
+        }
+    }
+
 }
