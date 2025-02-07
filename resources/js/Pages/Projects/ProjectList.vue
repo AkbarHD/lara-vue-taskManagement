@@ -7,7 +7,7 @@
             <div class="flex w-full">
                 <div class="w-2/3 border p-8">
                     <section class="bg-white dark:bg-gray-900">
-                        <ItemList :dataProjects="projects" />
+                        <ItemList :dataProjects="projects" @search="searching" />
                     </section>
                 </div>
                 <div class="w-1/3 bg-gray-100 p-8 flex flex-col ">
@@ -16,7 +16,7 @@
                         <hr class="mb-2">
                         <table class="table w-full">
                             <tbody>
-                                <tr class="border-b" v-for="(project, index) in projects" :key="index">
+                                <tr class="border-b" v-for="(project, index) in listProjects" :key="index">
                                     <td class="p-2 hover:bg-gray-300">{{ project.name_proyek }}</td>
                                     <td class="flex gap-1">
                                         <svg @click="confirmEditProject(project)"
@@ -32,9 +32,10 @@
                                         </svg>
 
                                         <!-- tidak menggunaan <Link> -->
-                                        <svg @click="confirmDeleteProject(project.id)" class="w-6 h-6 text-red-600 dark:text-white cursor-pointer" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
+                                        <svg @click="confirmDeleteProject(project.id)"
+                                            class="w-6 h-6 text-red-600 dark:text-white cursor-pointer"
+                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                                 stroke-width="2"
                                                 d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
@@ -116,6 +117,8 @@ import { reactive, ref } from 'vue';
 defineProps({
     projects: Object,
     teams: Object,
+    search: Object,
+    listProjects: Object
 });
 
 const showEditModal = ref(false);
@@ -125,7 +128,7 @@ const idDelProject = ref(null);
 
 
 const forProject = reactive({
-    team_id: null, // Sesuaikan dengan backend
+    team_id: null,
     name_proyek: null, // Sesuaikan dengan backend
     start: null,
     end: null,
@@ -161,5 +164,8 @@ const closeModal = () => {
     if (showDeleteModal.value) showDeleteModal.value = false;
 }
 
+const searching = (key) => {
+    router.get('/projects/index', { q: key }, { preserveState: true });
+}
 
 </script>

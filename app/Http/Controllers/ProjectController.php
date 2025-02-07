@@ -12,11 +12,17 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 class ProjectController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         // ke relasi teams dlu, lalu ke relasi users, yang di model teams
-        $projects = Project::whereHas('teams.users', function ($query) use ($user) {
+        $listProjects = Project::whereHas('teams.users', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->get();
+
+        $projects = Project::when($request->q, function($query, $q) {
+            $query->where('name_proyek', 'LIKE', '%' . $q . '%');
+        })->whereHas('teams.users', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })->get();
 
@@ -27,7 +33,9 @@ class ProjectController extends Controller
         return Inertia::render('Projects/ProjectList', [
             'menuTask' => 'active',
             'projects' => $projects,
-            'teams' => $teams
+            'listProjects' => $listProjects, // agar tidak ikut ke sarch
+            'teams' => $teams,
+            'search' => $request->only('q')
         ]);
     }
     public function create()
